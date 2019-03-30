@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AmmoM5 : MonoBehaviour {
+public class M5Ammo : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

@@ -39,6 +39,7 @@ namespace ToyShootingVr.Player
                 log.Show(true);
             }
         }
+         
 
         void DisablePlayer()
         {
