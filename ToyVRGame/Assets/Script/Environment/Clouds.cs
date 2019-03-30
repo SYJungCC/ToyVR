@@ -22,8 +22,6 @@ public class Clouds : MonoBehaviour {
     {
         if(other.CompareTag("Sky"))
         {
-            Debug.Log("kkk");
-
             random = Random.Range(0.15f, 0.2f);
             this.transform.position = originalPosition;
         }

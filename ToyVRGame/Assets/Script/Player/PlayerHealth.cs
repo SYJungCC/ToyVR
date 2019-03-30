@@ -3,66 +3,77 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerHealth : NetworkBehaviour
+namespace ToyShootingVr.Player
 {
-    [SyncVar(hook = "OnHealthChanged")] public int health;
-    private ToyPlayerController player;
-    private int maxHealth = 13;
+    public class PlayerHealth : NetworkBehaviour
+    {
+        [SyncVar(hook = "OnHealthChanged")]
+        public int health;
+        private PlayerController player; //character 
+        private const int MAX_HEALTH = 13;
 
-    // Use this for initialization
-    void Start () {
-        if(isLocalPlayer)
+        // Use this for initialization
+        void Start()
         {
-            player = GetComponent<ToyPlayerController>();
-            health = maxHealth;
+            if (isLocalPlayer)
+            {
+                player = GetComponent<PlayerController>();
+                health = MAX_HEALTH;   // have to call one more time for UI. 
+            }
         }
-    }
 
-    void OnHealthChanged(int value)
-    {
-        health = value;
-    }
+        [ServerCallback]
+        private void OnEnable()
+        {
+            health = MAX_HEALTH;
+        }
 
-    [ServerCallback]
-    void OnEnable()
-    {
-        health = maxHealth;
-    }
 
+        private void OnHealthChanged(int value)
+        {
+            health = value;
+            if (isLocalPlayer)
+            {
+                player.gameUI.SetHealth(value, MAX_HEALTH);
+            }
+        }
+
+ 
+        [Server]
+        public bool TakeDamage()
+        {
+            bool died = false;
+
+            health--;
+            if (health <= 0)
+            {
+                health = 0;
+                died = true;
+            }
+
+            RpcTakeDamage(died);
+
+            return died;
+        }
+
+        [ClientRpc]
+        public void RpcTakeDamage(bool died)
+        {
+            if (isLocalPlayer)
+            {
+                StartCoroutine(DamageEffect());
+            }
+
+            if (died)
+            {
+                player.Die();
+            }
+        }
    
-    [Server]
-    public bool TakeDamage()
-    {
-        bool died = false;
-
-        health--;
-        if (health <= 0)
+        private  IEnumerator DamageEffect()
         {
-            health = 0;
-            died = true;
+            yield return new WaitForFixedUpdate();
+
         }
-
-        RpcTakeDamage(died);
-
-        return died;
-    }
-    [ClientRpc]
-    void RpcTakeDamage(bool died)
-    {
-        if (isLocalPlayer)
-        {
-            StartCoroutine(DamageEffect());
-        }
-
-        if (died)
-        {
-            player.Die();
-        }
-    }
-
-    private IEnumerator DamageEffect()
-    {
-        yield return new WaitForFixedUpdate();
-
     }
 }

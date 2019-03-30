@@ -2,51 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-
-public class GameNetworkManager : NetworkManager {
-
-    private void Start()
+namespace ToyShootingVr.Core
+{
+    public class GameNetworkManager : NetworkManager
     {
-        Debug.Log("Start");
-    }
 
-    public override void OnServerConnect(NetworkConnection conn)
-    {
-        Debug.Log("OnServerConnect :" + spawnPrefabs.Count);
-    }
-    public override void OnServerReady(NetworkConnection conn)
-    {
-        Debug.Log("OnServerReady :" + spawnPrefabs.Count);
-    }
+        private void Start()
+        {
+            Debug.Log("Start");
+        }
 
-    public override void OnStartServer()
-    {
-        Debug.Log("OnStartServer :" + spawnPrefabs.Count);
-    }
+        public override void OnServerConnect(NetworkConnection conn)
+        {
+            Debug.Log("OnServerConnect :" + spawnPrefabs.Count);
+        }
+        public override void OnServerReady(NetworkConnection conn)
+        {
+            Debug.Log("OnServerReady :" + spawnPrefabs.Count);
+        }
 
-    public override void OnStartClient(NetworkClient client)
-    {
-        Debug.Log("OnStartClient :" + spawnPrefabs.Count);
-    }
+        public override void OnStartServer()
+        {
+            Debug.Log("OnStartServer :" + spawnPrefabs.Count);
+        }
 
-    private void Update()
-    {
-    }
+        public override void OnStartClient(NetworkClient client)
+        {
+            Debug.Log("OnStartClient :" + spawnPrefabs.Count);
+        }
 
-    public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
-    {
-        base.OnServerAddPlayer(conn, playerControllerId);
-    }
+        private void Update()
+        {
+        }
 
-    public override void OnClientConnect(NetworkConnection conn)
-    {
-        base.OnClientConnect(conn);
-    }
+        public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
+        {
+            base.OnServerAddPlayer(conn, playerControllerId);
+        }
 
-    public override void OnServerRemovePlayer(NetworkConnection conn, PlayerController player)
-    {
-        Debug.Log("ServerRemovePlayer");
-        base.OnServerRemovePlayer(conn, player);
-    }
+        public override void OnClientConnect(NetworkConnection conn)
+        {
+            base.OnClientConnect(conn);
+        }
 
+        public override void OnServerRemovePlayer(NetworkConnection conn, PlayerController player)
+        {
+            Debug.Log("ServerRemovePlayer");
+            base.OnServerRemovePlayer(conn, player);
+        }
+
+    }
 }
